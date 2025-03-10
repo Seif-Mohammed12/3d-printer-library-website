@@ -80,30 +80,25 @@ document.addEventListener('DOMContentLoaded', function () {
     btnLeft.addEventListener("click", movePrev);
     btnRight.addEventListener("click", moveNext);
   
-    // ✅ TOUCH EVENTS
-    track.addEventListener("touchstart", (e) => {
+    // ✅ POINTER EVENTS
+    track.addEventListener("pointerdown", (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      startX = e.touches[0].clientX;
+      startX = e.clientX;
       isDragging = true;
     });
   
-    track.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    track.addEventListener("pointermove", (e) => {
       if (!isDragging) return;
-      const moveX = e.touches[0].clientX;
+      const moveX = e.clientX;
       const diff = startX - moveX;
   
       // Optionally, visually drag the slide here
-       track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
+      track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
     });
   
-    track.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    track.addEventListener("pointerup", (e) => {
       if (!isDragging) return;
-      const endX = e.changedTouches[0].clientX;
+      const endX = e.clientX;
       const diff = startX - endX;
       const threshold = 50;
   
