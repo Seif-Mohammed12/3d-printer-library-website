@@ -80,25 +80,25 @@ document.addEventListener('DOMContentLoaded', function () {
     btnLeft.addEventListener("click", movePrev);
     btnRight.addEventListener("click", moveNext);
   
-    // ✅ POINTER EVENTS
-    track.addEventListener("pointerdown", (e) => {
+    // ✅ TOUCH EVENTS
+    track.addEventListener("touchstart", (e) => {
       e.preventDefault();
-      startX = e.clientX;
+      startX = e.touches[0].clientX;
       isDragging = true;
     });
   
-    track.addEventListener("pointermove", (e) => {
+    track.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
-      const moveX = e.clientX;
+      const moveX = e.touches[0].clientX;
       const diff = startX - moveX;
   
       // Optionally, visually drag the slide here
       track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
     });
   
-    track.addEventListener("pointerup", (e) => {
+    track.addEventListener("touchend", (e) => {
       if (!isDragging) return;
-      const endX = e.clientX;
+      const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
       const threshold = 50;
   
