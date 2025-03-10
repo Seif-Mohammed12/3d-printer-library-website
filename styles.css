@@ -1,0 +1,399 @@
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    cursor: pointer;
+  }
+  
+
+.navbar {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-item {
+    padding: 10px 18px;
+    border-radius: 999px;
+    background-color: transparent;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+.nav-item.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 999px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 999px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-bar button {
+    background-color: #007BFF;
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1); /* Makes icon white */
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        background-color: #333;
+        padding: 10px 0;
+    }
+
+    .navbar a {
+        padding: 10px 20px;
+    }
+
+    .search-bar {
+        width: 100%;
+        order: 3;
+        justify-content: center;
+    }
+
+    .menu-toggle {
+        display: block;
+        order: 2;
+        margin-left: auto;
+    }
+
+    .navbar.active {
+        display: flex;
+    }
+}
+
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+    transform: scale(1.1); /* avoids edge clipping */
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 150px 20px;
+    color: white;
+}
+
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .cta-button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+}
+
+
+
+/* Featured Printers */
+.featured-printers {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.featured-printers h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.printer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.printer-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.printer-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.printer-card h3 {
+    margin: 15px 0 10px;
+    font-size: 1.5rem;
+}
+
+.printer-card p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.view-button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+
+
+@media (max-width: 500px) {
+    .printer-card {
+      padding: 15px;
+    }
+  
+    .printer-card h3 {
+      font-size: 1.2rem;
+    }
+  
+    .printer-card p {
+      font-size: 0.95rem;
+    }
+  }
+  
+/* --- Carousel Styles --- */
+.carousel-container {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    gap: 20px;
+}
+
+.carousel-container .printer-grid {
+    grid-template-columns: none;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 2;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-btn.left {
+    left: 10px;
+}
+
+.carousel-btn.right {
+    right: 10px;
+}
+
+/* Responsive carousel: show 1 card on small screens */
+@media (max-width: 768px) {
+    .carousel-container .printer-grid {
+        gap: 10px;
+    }
+
+    .printer-card {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Desktop: show 2 cards */
+@media (min-width: 769px) {
+    .printer-card {
+        min-width: calc(50% - 10px);
+        max-width: calc(50% - 10px);
+    }
+}
+
+.carousel-dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: #007BFF;
+}
+
+
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-links {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.social-icons img {
+    width: 24px;
+    height: 24px;
+    margin: 0 10px;
+}
+
+@media (max-width: 600px) {
+    .footer {
+      text-align: center;
+    }
+  
+    .footer-links, .social-icons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .footer-links a {
+      margin: 5px 0;
+    }
+  
+    .social-icons img {
+      margin: 5px;
+    }
+  }
+  
