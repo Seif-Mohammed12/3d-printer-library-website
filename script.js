@@ -25,8 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
   
     let currentIndex = 0;
     let autoplayInterval;
-    let touchStartX = 0;
-    let touchEndX = 0;
+  
+    let startX = 0;
+    let isDragging = false;
   
     const isMobile = () => window.innerWidth <= 768;
     const cardsToShow = () => (isMobile() ? 1 : 2);
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCarousel() {
       const cardWidth = cards[0].offsetWidth + 20;
       const newTransform = -currentIndex * cardWidth;
-      track.style.transition = "transform 0.5s ease-in-out";
+      track.style.transition = "transform 0.4s ease-in-out";
       track.style.transform = `translateX(${newTransform}px)`;
   
       if (isMobile()) updateDots();
@@ -81,27 +82,44 @@ document.addEventListener('DOMContentLoaded', function () {
     btnLeft.addEventListener("click", movePrev);
     btnRight.addEventListener("click", moveNext);
   
+    // ✅ TOUCH EVENTS
     track.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    });
+  
+    track.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const moveX = e.touches[0].clientX;
+      const diff = startX - moveX;
+  
+      // Optionally, visually drag the slide here
+      // track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
     });
   
     track.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
+      if (!isDragging) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      const threshold = 50;
+  
+      if (diff > threshold) {
+        moveNext();
+      } else if (diff < -threshold) {
+        movePrev();
+      } else {
+        updateCarousel(); // reset back if no swipe
+      }
+  
+      isDragging = false;
     });
   
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      if (touchEndX < touchStartX - swipeThreshold) moveNext();
-      else if (touchEndX > touchStartX + swipeThreshold) movePrev();
-    }
-  
     function startAutoplay() {
-      stopAutoplay(); // Clear existing first
+      stopAutoplay();
       if (isMobile()) {
         autoplayInterval = setInterval(() => {
           moveNext();
-        }, 3000); // change slide time interval
+        }, 3000);
       }
     }
   
@@ -116,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
       startAutoplay();
     });
   
-    // Initialize
+    // INIT
     showButtons();
     updateCarousel();
     startAutoplay();
