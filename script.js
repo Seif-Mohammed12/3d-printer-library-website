@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentIndex = 0;
     let startX = 0;
     let isDragging = false;
+    let animationFrameId;
   
     const isMobile = () => window.innerWidth <= 768;
     const cardsToShow = () => (isMobile() ? 1 : 2);
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       startX = e.touches[0].clientX;
       isDragging = true;
+      track.style.transition = "none";
     });
   
     track.addEventListener("touchmove", (e) => {
@@ -111,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   
       isDragging = false;
+      track.style.transition = "transform 0.4s ease-in-out";
     });
   
     window.addEventListener("resize", () => {
