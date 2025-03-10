@@ -84,11 +84,15 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // ✅ TOUCH EVENTS
     track.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       startX = e.touches[0].clientX;
       isDragging = true;
     });
   
     track.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       if (!isDragging) return;
       const moveX = e.touches[0].clientX;
       const diff = startX - moveX;
@@ -98,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   
     track.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       if (!isDragging) return;
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
@@ -139,4 +145,3 @@ document.addEventListener('DOMContentLoaded', function () {
     updateCarousel();
     startAutoplay();
   });
-  
