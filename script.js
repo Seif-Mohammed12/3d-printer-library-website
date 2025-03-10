@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const dotsContainer = document.querySelector(".carousel-dots");
   
     let currentIndex = 0;
-    let autoplayInterval;
-  
     let startX = 0;
     let isDragging = false;
   
@@ -98,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const diff = startX - moveX;
   
       // Optionally, visually drag the slide here
-      // track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
+       track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
     });
   
     track.addEventListener("touchend", (e) => {
@@ -120,28 +118,13 @@ document.addEventListener('DOMContentLoaded', function () {
       isDragging = false;
     });
   
-    function startAutoplay() {
-      stopAutoplay();
-      if (isMobile()) {
-        autoplayInterval = setInterval(() => {
-          moveNext();
-        }, 3000);
-      }
-    }
-  
-    function stopAutoplay() {
-      clearInterval(autoplayInterval);
-    }
-  
     window.addEventListener("resize", () => {
       currentIndex = 0;
       showButtons();
       updateCarousel();
-      startAutoplay();
     });
   
     // INIT
     showButtons();
     updateCarousel();
-    startAutoplay();
   });
