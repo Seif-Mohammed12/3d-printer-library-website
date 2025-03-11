@@ -83,11 +83,10 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // ✅ TOUCH EVENTS
     track.addEventListener("touchstart", (e) => {
-      e.preventDefault();
       startX = e.touches[0].clientX;
       isDragging = true;
       track.style.transition = "none";
-    });
+    }, { passive: false });
   
     track.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
@@ -96,11 +95,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const diff = startX - moveX;
   
       const currentTransform = -currentIndex * (cards[0].offsetWidth + 20);
-      track.style.transform = `translateX(${currentTransform - diff}px)`;
-    });
+      requestAnimationFrame(() => {
+        track.style.transform = `translateX(${currentTransform - diff}px)`;
+      });
+    }, { passive: false });
   
     track.addEventListener("touchend", (e) => {
       if (!isDragging) return;
+      
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
       const threshold = 50;
@@ -111,14 +113,20 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (diff < 0 && currentIndex > 0) {
           movePrev();
         } else {
-          updateCarousel(); // Reset if at the end or beginning
+          updateCarousel();
         }
       } else {
-        updateCarousel(); // Reset if swipe wasn't strong enough
+        updateCarousel();
       }
   
       isDragging = false;
       track.style.transition = "transform 0.4s ease-in-out";
+    });
+
+    track.addEventListener("touchcancel", () => {
+      isDragging = false;
+      track.style.transition = "transform 0.4s ease-in-out";
+      updateCarousel();
     });
   
     window.addEventListener("resize", () => {
