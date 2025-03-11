@@ -1,50 +1,40 @@
-// Add this before your DOM content loaded event
-async function loadRandomPrinters(count = 6) {
-  try {
-    const response = await fetch('data/printers.json');
-    const data = await response.json();
-    
-    // Shuffle array and get first 'count' items
-    const randomPrinters = data.printers
-      .sort(() => Math.random() - 0.5)
-      .slice(0, count);
-
-    // Update carousel content
-    const track = document.querySelector('.carousel-track');
-    track.innerHTML = randomPrinters.map(printer => `
-      <div class="printer-card">
-        <img src="${printer.image}" alt="${printer.name}">
-        <h3>${printer.name}</h3>
-        <p>${printer.description}</p>
-        <button class="view-button">View Details</button>
-      </div>
-    `).join('');
-
-    // Reinitialize carousel
-    init();
-  } catch (error) {
-    console.error('Error loading printers:', error);
-  }
-}
-
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     // Menu toggle functionality
-    const toggleButton = document.querySelector('.menu-toggle');
+    const menuToggle = document.querySelector('.menu-toggle');
     const navbar = document.querySelector('.navbar');
-  
-    toggleButton.addEventListener('click', () => {
-        navbar.classList.toggle('active');
-    });
-  
-    // Close menu when a link is clicked (on mobile)
-    document.querySelectorAll('.navbar a').forEach(link => {
-        link.addEventListener('click', () => {
-            navbar.classList.remove('active');
-        });
-    });
 
-    // Carousel initialization
+    // Remove loadRandomPrinters function as it's not being used
+    
+    if (menuToggle && navbar) {
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default button behavior
+            e.stopPropagation(); // Stop event bubbling
+            navbar.classList.toggle('active');
+            const isExpanded = navbar.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded);
+            console.log('Menu toggled:', isExpanded); // Debug line
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (navbar.classList.contains('active') && 
+                !navbar.contains(e.target) && 
+                !menuToggle.contains(e.target)) {
+                navbar.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close menu when clicking a nav link
+        navbar.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', () => {
+                navbar.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    // Initialize carousel
     initializeCarousel();
 });
 
