@@ -29,169 +29,92 @@ async function loadRandomPrinters(count = 6) {
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function () {
+    // Menu toggle functionality
     const toggleButton = document.querySelector('.menu-toggle');
     const navbar = document.querySelector('.navbar');
   
     toggleButton.addEventListener('click', () => {
-      navbar.classList.toggle('active');
+        navbar.classList.toggle('active');
     });
   
-    // Optional: close menu when a link is clicked (on mobile)
+    // Close menu when a link is clicked (on mobile)
     document.querySelectorAll('.navbar a').forEach(link => {
-      link.addEventListener('click', () => {
-        navbar.classList.remove('active');
-      });
+        link.addEventListener('click', () => {
+            navbar.classList.remove('active');
+        });
     });
 
-    // Load random printers
-    loadRandomPrinters();
-  });
+    // Carousel initialization
+    initializeCarousel();
+});
 
-  
-  document.addEventListener("DOMContentLoaded", async () => {
+async function initializeCarousel() {
     try {
         const response = await fetch('data/printers.json');
         const data = await response.json();
         
-        // Get random printers
-        const randomPrinters = data.printers
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 4); // Show 4 random printers
-
-        // Update carousel content
-        const track = document.querySelector('.carousel-track');
-        track.innerHTML = randomPrinters.map(printer => `
-            <div class="printer-card">
-                <img src="${printer.image}" alt="${printer.name}">
-                <h3>${printer.name}</h3>
-                <p>${printer.description}</p>
-                <a href="#" class="view-button">View Details</a>
-            </div>
-        `).join('');
-
-        // Initialize carousel
-        const cards = document.querySelectorAll(".printer-card");
-        const btnLeft = document.querySelector(".carousel-btn.left");
-        const btnRight = document.querySelector(".carousel-btn.right");
-        const dotsContainer = document.querySelector(".carousel-dots");
-      
-        let currentIndex = 0;
-        let startX = 0;
-        let isDragging = false;
-        let currentTranslate = 0;
-        let prevTranslate = 0;
-      
-        const isMobile = () => window.innerWidth <= 768;
-        const cardsToShow = () => (isMobile() ? 1 : 2);
-      
-        function updateCarousel(transition = true) {
-          const cardWidth = cards[0].offsetWidth + 20;
-          currentTranslate = -currentIndex * cardWidth;
-          
-          track.style.transition = transition ? "transform 0.4s ease-in-out" : "none";
-          track.style.transform = `translateX(${currentTranslate}px)`;
-          updateDots();
+        const carouselInner = document.querySelector('.carousel-inner');
+        const indicators = document.querySelector('.carousel-indicators');
+        
+        // Clear existing content
+        carouselInner.innerHTML = '';
+        indicators.innerHTML = '';
+        
+        // Group printers into pairs for desktop view
+        const itemsPerSlide = window.innerWidth <= 768 ? 1 : 2;
+        const groups = [];
+        
+        for (let i = 0; i < data.printers.length; i += itemsPerSlide) {
+            groups.push(data.printers.slice(i, i + itemsPerSlide));
         }
-      
-        function updateDots() {
-          if (!dotsContainer) return;
-          dotsContainer.innerHTML = '';
-          const totalPages = isMobile() ? cards.length : Math.ceil(cards.length / 2);
-          
-          for (let i = 0; i < totalPages; i++) {
-            const dot = document.createElement("span");
-            dot.classList.add("dot");
-            if (i === Math.floor(currentIndex / cardsToShow())) {
-              dot.classList.add("active");
-            }
-            dot.addEventListener('click', () => {
-              currentIndex = i * cardsToShow();
-              updateCarousel();
+        
+        // Create carousel items and indicators
+        groups.forEach((group, index) => {
+            const item = document.createElement('div');
+            item.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+            
+            const row = document.createElement('div');
+            row.className = 'row g-4 justify-content-center';
+            
+            group.forEach(printer => {
+                const col = document.createElement('div');
+                col.className = 'col-12 col-md-6';
+                col.innerHTML = `
+                    <div class="printer-card">
+                        <img src="${printer.image}" alt="${printer.name}" class="card-img-top">
+                        <div class="card-body">
+                            <h3 class="card-title">${printer.name}</h3>
+                            <p class="card-text">${printer.description}</p>
+                            <button class="btn btn-primary view-button">View Details</button>
+                        </div>
+                    </div>
+                `;
+                row.appendChild(col);
             });
-            dotsContainer.appendChild(dot);
-          }
-        }
-      
-        // Touch Events with improved handling
-        track.addEventListener("touchstart", (e) => {
-          startX = e.touches[0].clientX;
-          isDragging = true;
-          prevTranslate = currentTranslate;
-          track.style.transition = "none";
-        }, { passive: true });
-      
-        track.addEventListener("touchmove", (e) => {
-          if (!isDragging) return;
-          e.preventDefault();
-          const currentX = e.touches[0].clientX;
-          const diff = startX - currentX;
-          currentTranslate = prevTranslate - diff;
-          
-          requestAnimationFrame(() => {
-            track.style.transform = `translateX(${currentTranslate}px)`;
-          });
-        }, { passive: false });
-      
-        track.addEventListener("touchend", (e) => {
-          if (!isDragging) return;
-          
-          const cardWidth = cards[0].offsetWidth + 20;
-          const diff = startX - e.changedTouches[0].clientX;
-          const threshold = cardWidth * 0.2; // 20% of card width
-          
-          if (Math.abs(diff) > threshold) {
-            if (diff > 0 && currentIndex < cards.length - cardsToShow()) {
-              currentIndex += 1; // Move one card at a time
-            } else if (diff < 0 && currentIndex > 0) {
-              currentIndex -= 1; // Move one card at a time
+            
+            item.appendChild(row);
+            carouselInner.appendChild(item);
+            
+            // Create indicator
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#printerCarousel');
+            indicator.setAttribute('data-bs-slide-to', index.toString());
+            if (index === 0) {
+                indicator.classList.add('active');
             }
-          }
-          
-          isDragging = false;
-          track.style.transition = "transform 0.4s ease-in-out";
-          updateCarousel();
+            indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+            indicators.appendChild(indicator);
         });
-
-        // Add touch cancel handler
-        track.addEventListener("touchcancel", () => {
-          isDragging = false;
-          track.style.transition = "transform 0.4s ease-in-out";
-          updateCarousel();
+        
+        // Initialize Bootstrap carousel
+        const carousel = new bootstrap.Carousel(document.getElementById('printerCarousel'), {
+            interval: 5000,
+            touch: true,
+            ride: 'carousel'
         });
-
-        // Initialization
-        function init() {
-          showButtons();
-          updateCarousel();
-          dotsContainer.style.display = 'flex';
-        }
-
-        function showButtons() {
-          const visible = !isMobile();
-          btnLeft.style.display = visible ? "block" : "none";
-          btnRight.style.display = visible ? "block" : "none";
-        }
-
-        btnLeft.addEventListener("click", () => {
-          if (currentIndex > 0) {
-            currentIndex -= cardsToShow();
-            updateCarousel();
-          }
-        });
-
-        btnRight.addEventListener("click", () => {
-          if (currentIndex < cards.length - cardsToShow()) {
-            currentIndex += cardsToShow();
-            updateCarousel();
-          }
-        });
-
-        window.addEventListener("resize", () => {
-          init();
-        });
-
-        init();
+        
     } catch (error) {
         console.error('Error loading printers:', error);
     }
-  });
+}

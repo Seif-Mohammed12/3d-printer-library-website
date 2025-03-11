@@ -448,3 +448,116 @@ body, html {
         margin: 5px;
     }
 }
+
+/* Carousel customization */
+.carousel {
+    padding: 0 50px;
+    position: relative;
+}
+
+.carousel-inner {
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-item {
+    display: none;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+    display: block;
+}
+
+.carousel-item-next:not(.carousel-item-start),
+.active.carousel-item-end {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.carousel-item-prev:not(.carousel-item-end),
+.active.carousel-item-start {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.carousel-item.active,
+.carousel-item-next.carousel-item-start,
+.carousel-item-prev.carousel-item-end {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Custom carousel controls */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.carousel:hover .carousel-control-prev,
+.carousel:hover .carousel-control-next {
+    opacity: 0.8;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-indicators {
+    bottom: -50px;
+    margin-bottom: 0;
+}
+
+.carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #007BFF;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-indicators .active {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .printer-card {
+        width: 100%;
+        height: 420px;
+        min-width: 280px;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .carousel-inner {
+        padding: 0 20px;
+    }
+}
+
+@media (min-width: 769px) {
+    .carousel-item .row {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .carousel-item .col-md-6 {
+        width: calc(50% - 10px);
+        max-width: 500px;
+    }
+}
