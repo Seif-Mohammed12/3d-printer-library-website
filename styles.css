@@ -173,17 +173,17 @@ body, html {
     position: relative;
     z-index: 1;
     text-align: center;
-    padding: 150px 20px;
+    padding: 200px 20px;
     color: white;
 }
 
 .hero-content h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     margin-bottom: 20px;
 }
 
 .hero-content p {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     margin-bottom: 30px;
 }
 
@@ -198,11 +198,11 @@ body, html {
 
 @media (max-width: 768px) {
     .hero-content h1 {
-        font-size: 2rem;
+        font-size: 3rem;
     }
 
     .hero-content p {
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
 
     .cta-button {
