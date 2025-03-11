@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   
-    // Touch Events
+    // Touch Events with improved handling
     track.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
       isDragging = true;
@@ -82,19 +82,28 @@ document.addEventListener('DOMContentLoaded', function () {
   
     track.addEventListener("touchend", (e) => {
       if (!isDragging) return;
+      
       const cardWidth = cards[0].offsetWidth + 20;
       const diff = startX - e.changedTouches[0].clientX;
       const threshold = cardWidth * 0.2; // 20% of card width
       
       if (Math.abs(diff) > threshold) {
         if (diff > 0 && currentIndex < cards.length - cardsToShow()) {
-          currentIndex += cardsToShow();
+          currentIndex += 1; // Move one card at a time
         } else if (diff < 0 && currentIndex > 0) {
-          currentIndex -= cardsToShow();
+          currentIndex -= 1; // Move one card at a time
         }
       }
       
       isDragging = false;
+      track.style.transition = "transform 0.4s ease-in-out";
+      updateCarousel();
+    });
+
+    // Add touch cancel handler
+    track.addEventListener("touchcancel", () => {
+      isDragging = false;
+      track.style.transition = "transform 0.4s ease-in-out";
       updateCarousel();
     });
 
