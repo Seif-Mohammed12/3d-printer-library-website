@@ -91,11 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
   
     track.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
+      e.preventDefault();
       const moveX = e.touches[0].clientX;
       const diff = startX - moveX;
   
-      // Optionally, visually drag the slide here
-      track.style.transform = `translateX(${-currentIndex * (cards[0].offsetWidth + 20) - diff}px)`;
+      const currentTransform = -currentIndex * (cards[0].offsetWidth + 20);
+      track.style.transform = `translateX(${currentTransform - diff}px)`;
     });
   
     track.addEventListener("touchend", (e) => {
@@ -104,12 +105,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const diff = startX - endX;
       const threshold = 50;
   
-      if (diff > threshold) {
-        moveNext();
-      } else if (diff < -threshold) {
-        movePrev();
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0 && currentIndex < cards.length - 1) {
+          moveNext();
+        } else if (diff < 0 && currentIndex > 0) {
+          movePrev();
+        } else {
+          updateCarousel(); // Reset if at the end or beginning
+        }
       } else {
-        updateCarousel(); // reset back if no swipe
+        updateCarousel(); // Reset if swipe wasn't strong enough
       }
   
       isDragging = false;
@@ -117,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   
     window.addEventListener("resize", () => {
-      currentIndex = 0;
       showButtons();
       updateCarousel();
     });

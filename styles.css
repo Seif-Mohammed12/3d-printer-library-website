@@ -21,8 +21,7 @@ body, html {
     width: auto;
     object-fit: contain;
     cursor: pointer;
-  }
-  
+}
 
 .navbar {
     display: flex;
@@ -49,7 +48,6 @@ body, html {
     background-color: #007BFF;
     color: white;
 }
-
 
 .search-bar {
     display: flex;
@@ -136,7 +134,6 @@ body, html {
     }
 }
 
-
 /* Hero Section */
 .hero {
     position: relative;
@@ -162,7 +159,6 @@ body, html {
     padding: 150px 20px;
     color: white;
 }
-
 
 .hero-content h1 {
     font-size: 3rem;
@@ -197,8 +193,6 @@ body, html {
         padding: 8px 16px;
     }
 }
-
-
 
 /* Featured Printers */
 .featured-printers {
@@ -250,40 +244,43 @@ body, html {
     font-weight: bold;
 }
 
-
-
 @media (max-width: 500px) {
     .printer-card {
-      padding: 15px;
+        padding: 15px;
+        max-width: 100%; /* Ensure the card takes full width on small screens */
+        margin: 0 auto; /* Center the card */
     }
-  
+
     .printer-card h3 {
-      font-size: 1.2rem;
+        font-size: 1.2rem;
     }
-  
+
     .printer-card p {
-      font-size: 0.95rem;
+        font-size: 0.95rem;
     }
-  }
-  
+}
+
 /* --- Carousel Styles --- */
 .carousel-container {
     position: relative;
     max-width: 100%;
     overflow: hidden;
     margin: 0 auto;
+    padding: 0 20px; /* Add padding to container */
 }
 
 .carousel-track {
     display: flex;
     transition: transform 0.4s ease-in-out;
     gap: 20px;
+    width: 100%; /* Ensure track takes full width */
 }
 
 .carousel-container .printer-grid {
     grid-template-columns: none;
     display: flex;
     flex-wrap: nowrap;
+    width: 100%; /* Ensure grid takes full width */
 }
 
 .carousel-btn {
@@ -316,20 +313,25 @@ body, html {
 /* Responsive carousel: show 1 card on small screens */
 @media (max-width: 768px) {
     .carousel-container .printer-grid {
-        gap: 10px;
+        gap: 20px;
     }
 
     .printer-card {
-        min-width: 100%;
-        max-width: 100%;
+        min-width: calc(100% - 40px); /* Account for container padding */
+        max-width: calc(100% - 40px);
+        margin: 0 auto;
+    }
+
+    .carousel-track {
+        padding: 0 10px; /* Add padding to track */
     }
 }
 
 /* Desktop: show 2 cards */
 @media (min-width: 769px) {
     .printer-card {
-        min-width: calc(50% - 10px);
-        max-width: calc(50% - 10px);
+        min-width: calc(45% - 10px); /* Adjusted to make the cards smaller */
+        max-width: calc(45% - 10px); /* Adjusted to make the cards smaller */
     }
 }
 
@@ -351,8 +353,6 @@ body, html {
 .dot.active {
     background-color: #007BFF;
 }
-
-
 
 /* Footer */
 .footer {
@@ -380,20 +380,19 @@ body, html {
 
 @media (max-width: 600px) {
     .footer {
-      text-align: center;
+        text-align: center;
     }
-  
+
     .footer-links, .social-icons {
-      flex-direction: column;
-      gap: 10px;
+        flex-direction: column;
+        gap: 10px;
     }
-  
+
     .footer-links a {
-      margin: 5px 0;
+        margin: 5px 0;
     }
-  
+
     .social-icons img {
-      margin: 5px;
+        margin: 5px;
     }
-  }
-  
+}
