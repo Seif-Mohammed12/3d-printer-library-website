@@ -1,0 +1,67 @@
+{
+  "printers": [
+    {
+      "id": 1,
+      "name": "Prusa i3 MK3S+",
+      "brand": "Prusa Research",
+      "image": "assets/prusamk3.jpg",
+      "description": "Reliable workhorse printer with auto bed leveling and exceptional print quality."
+    },
+    {
+      "id": 2,
+      "name": "Ender 3 V2",
+      "brand": "Creality",
+      "image": "assets/ender3v2.webp",
+      "description": "Popular beginner-friendly printer with silent operation and glass bed."
+    },
+    {
+      "id": 3,
+      "name": "Elegoo Mars 2 Pro",
+      "brand": "Elegoo",
+      "image": "assets/elegoomars2.webp",
+      "description": "Compact resin printer perfect for highly detailed miniatures."
+    },
+    {
+      "id": 4,
+      "name": "Artillery Sidewinder X2",
+      "brand": "Artillery",
+      "image": "assets/X2-2.webp",
+      "description": "Large format printer with direct drive and ultra-quiet operation."
+    },
+    {
+      "id": 5,
+      "name": "Anycubic Photon Mono X",
+      "brand": "Anycubic",
+      "image": "assets/PhotonMonoX_1.webp",
+      "description": "High-resolution resin printer with large build volume."
+    },
+    {
+      "id": 6,
+      "name": "Creality CR-6 SE",
+      "brand": "Creality",
+      "image": "assets/cr6se.webp",
+      "description": "Crowdfunded printer with auto bed leveling and silent operation."
+    },
+    {
+      "id": 7,
+      "name": "Bambu Lab X1-Carbon",
+      "brand": "Bambu Lab",
+      "image": "assets/bambux1.png",
+      "description": "Smart printer with AI monitoring and multi-material capabilities."
+    },
+    {
+      "id": 8,
+      "name": "Prusa XL",
+      "brand": "Prusa Research",
+      "image": "assets/prusaxl.avif",
+      "description": "Large-format printer with tool changing and advanced calibration."
+    },
+    {
+      "id": 9,
+      "name": "Ultimaker S5",
+      "brand": "Ultimaker",
+      "image": "assets/S5-Hero.webp",
+      "description": "Professional dual-extrusion printer with extensive material compatibility."
+    }
+  ]
+}
