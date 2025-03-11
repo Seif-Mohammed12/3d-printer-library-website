@@ -1,36 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Menu toggle functionality
     const menuToggle = document.querySelector('.menu-toggle');
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.querySelector('#mainNav');
 
-    // Remove loadRandomPrinters function as it's not being used
-    
     if (menuToggle && navbar) {
-        menuToggle.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent default button behavior
-            e.stopPropagation(); // Stop event bubbling
+        menuToggle.addEventListener('click', function() {
+            console.log('Menu button clicked'); // Debug line
             navbar.classList.toggle('active');
             const isExpanded = navbar.classList.contains('active');
             this.setAttribute('aria-expanded', isExpanded);
-            console.log('Menu toggled:', isExpanded); // Debug line
         });
 
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
-            if (navbar.classList.contains('active') && 
-                !navbar.contains(e.target) && 
-                !menuToggle.contains(e.target)) {
+            if (!navbar.contains(e.target) && !menuToggle.contains(e.target)) {
                 navbar.classList.remove('active');
                 menuToggle.setAttribute('aria-expanded', 'false');
             }
-        });
-
-        // Close menu when clicking a nav link
-        navbar.querySelectorAll('.nav-item').forEach(link => {
-            link.addEventListener('click', () => {
-                navbar.classList.remove('active');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            });
         });
     }
 

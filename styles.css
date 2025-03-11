@@ -100,28 +100,32 @@ body, html {
 @media (max-width: 768px) {
     .header {
         flex-wrap: wrap;
+        gap: 1rem;
     }
 
-    .logo img {
-        height: 40px;
+    .logo {
+        order: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+        order: 1;
+        margin-left: auto;
     }
 
     .navbar {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
+        width: 100%;
+        order: 2;
         background-color: #333;
         padding: 1rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
         flex-direction: column;
         align-items: center;
     }
 
     .navbar.active {
-        display: flex;
+        display: flex !important; /* Override Bootstrap's display property */
     }
 
     .navbar a {
@@ -132,18 +136,19 @@ body, html {
         width: 100%;
         text-align: center;
         padding: 0.75rem;
+        border-radius: 0;
+    }
+
+    .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: transparent;
     }
 
     .search-bar {
         width: 100%;
-        order: 2;
+        order: 3;
+        margin-top: 0.5rem;
         justify-content: center;
-    }
-
-    .menu-toggle {
-        display: block;
-        order: 1;
-        margin-left: auto;
     }
 
     .menu-toggle:focus {
@@ -206,7 +211,7 @@ body, html {
     }
 
     .cta-button {
-        font-size: 1rem;
+        font-size: 1.2rem;
         padding: 8px 16px;
     }
 }
