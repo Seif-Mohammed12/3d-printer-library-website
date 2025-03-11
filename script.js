@@ -26,115 +26,108 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentIndex = 0;
     let startX = 0;
     let isDragging = false;
-    let animationFrameId;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
   
     const isMobile = () => window.innerWidth <= 768;
     const cardsToShow = () => (isMobile() ? 1 : 2);
   
-    function updateCarousel() {
+    function updateCarousel(transition = true) {
       const cardWidth = cards[0].offsetWidth + 20;
-      const newTransform = -currentIndex * cardWidth;
-      track.style.transition = "transform 0.4s ease-in-out";
-      track.style.transform = `translateX(${newTransform}px)`;
-  
-      if (isMobile()) updateDots();
+      currentTranslate = -currentIndex * cardWidth;
+      
+      track.style.transition = transition ? "transform 0.4s ease-in-out" : "none";
+      track.style.transform = `translateX(${currentTranslate}px)`;
+      updateDots();
     }
   
     function updateDots() {
       if (!dotsContainer) return;
       dotsContainer.innerHTML = '';
-      const totalPages = cards.length;
+      const totalPages = isMobile() ? cards.length : Math.ceil(cards.length / 2);
+      
       for (let i = 0; i < totalPages; i++) {
         const dot = document.createElement("span");
         dot.classList.add("dot");
-        if (i === currentIndex) dot.classList.add("active");
+        if (i === Math.floor(currentIndex / cardsToShow())) {
+          dot.classList.add("active");
+        }
+        dot.addEventListener('click', () => {
+          currentIndex = i * cardsToShow();
+          updateCarousel();
+        });
         dotsContainer.appendChild(dot);
       }
     }
   
-    function showButtons() {
-      const visible = !isMobile();
-      btnLeft.style.display = visible ? "block" : "none";
-      btnRight.style.display = visible ? "block" : "none";
-      dotsContainer.style.display = visible ? "none" : "flex";
-    }
-  
-    function moveNext() {
-      if (isMobile()) {
-        currentIndex = (currentIndex + 1) % cards.length;
-      } else {
-        const maxIndex = cards.length - cardsToShow();
-        if (currentIndex < maxIndex) currentIndex++;
-      }
-      updateCarousel();
-    }
-  
-    function movePrev() {
-      if (isMobile()) {
-        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-      } else {
-        if (currentIndex > 0) currentIndex--;
-      }
-      updateCarousel();
-    }
-  
-    btnLeft.addEventListener("click", movePrev);
-    btnRight.addEventListener("click", moveNext);
-  
-    // ✅ TOUCH EVENTS
+    // Touch Events
     track.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
       isDragging = true;
+      prevTranslate = currentTranslate;
       track.style.transition = "none";
-    }, { passive: false });
+    }, { passive: true });
   
     track.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
       e.preventDefault();
-      const moveX = e.touches[0].clientX;
-      const diff = startX - moveX;
-  
-      const currentTransform = -currentIndex * (cards[0].offsetWidth + 20);
+      const currentX = e.touches[0].clientX;
+      const diff = startX - currentX;
+      currentTranslate = prevTranslate - diff;
+      
       requestAnimationFrame(() => {
-        track.style.transform = `translateX(${currentTransform - diff}px)`;
+        track.style.transform = `translateX(${currentTranslate}px)`;
       });
     }, { passive: false });
   
     track.addEventListener("touchend", (e) => {
       if (!isDragging) return;
+      const cardWidth = cards[0].offsetWidth + 20;
+      const diff = startX - e.changedTouches[0].clientX;
+      const threshold = cardWidth * 0.2; // 20% of card width
       
-      const endX = e.changedTouches[0].clientX;
-      const diff = startX - endX;
-      const threshold = 50;
-  
       if (Math.abs(diff) > threshold) {
-        if (diff > 0 && currentIndex < cards.length - 1) {
-          moveNext();
+        if (diff > 0 && currentIndex < cards.length - cardsToShow()) {
+          currentIndex += cardsToShow();
         } else if (diff < 0 && currentIndex > 0) {
-          movePrev();
-        } else {
-          updateCarousel();
+          currentIndex -= cardsToShow();
         }
-      } else {
-        updateCarousel();
       }
-  
+      
       isDragging = false;
-      track.style.transition = "transform 0.4s ease-in-out";
+      updateCarousel();
     });
 
-    track.addEventListener("touchcancel", () => {
-      isDragging = false;
-      track.style.transition = "transform 0.4s ease-in-out";
-      updateCarousel();
-    });
-  
-    window.addEventListener("resize", () => {
+    // Initialization
+    function init() {
       showButtons();
       updateCarousel();
+      dotsContainer.style.display = 'flex';
+    }
+
+    function showButtons() {
+      const visible = !isMobile();
+      btnLeft.style.display = visible ? "block" : "none";
+      btnRight.style.display = visible ? "block" : "none";
+    }
+
+    btnLeft.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex -= cardsToShow();
+        updateCarousel();
+      }
     });
-  
-    // INIT
-    showButtons();
-    updateCarousel();
+
+    btnRight.addEventListener("click", () => {
+      if (currentIndex < cards.length - cardsToShow()) {
+        currentIndex += cardsToShow();
+        updateCarousel();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      init();
+    });
+
+    init();
   });
