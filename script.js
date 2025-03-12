@@ -31,33 +31,34 @@ async function initializeCarousel() {
         
         const carouselInner = document.querySelector('.carousel-inner');
         const indicators = document.querySelector('.carousel-indicators');
+        const isMobile = window.innerWidth <= 768;
         
         // Clear existing content
         carouselInner.innerHTML = '';
         indicators.innerHTML = '';
         
-        // Group printers into pairs for desktop view
-        const itemsPerSlide = window.innerWidth <= 768 ? 1 : 2;
+        // Group printers (1 per slide on mobile, 2 on desktop)
+        const groupSize = isMobile ? 1 : 2;
         const groups = [];
-        
-        for (let i = 0; i < data.printers.length; i += itemsPerSlide) {
-            groups.push(data.printers.slice(i, i + itemsPerSlide));
+        for (let i = 0; i < data.printers.length; i += groupSize) {
+            groups.push(data.printers.slice(i, Math.min(i + groupSize, data.printers.length)));
         }
         
-        // Create carousel items and indicators
+        // Create carousel items
         groups.forEach((group, index) => {
             const item = document.createElement('div');
             item.className = `carousel-item ${index === 0 ? 'active' : ''}`;
             
-            const row = document.createElement('div');
-            row.className = 'row g-4 justify-content-center';
+            const container = document.createElement('div');
+            container.className = 'd-flex justify-content-center gap-4';
             
             group.forEach(printer => {
-                const col = document.createElement('div');
-                col.className = 'col-12 col-md-6';
-                col.innerHTML = `
-                    <div class="printer-card">
-                        <img src="${printer.image}" alt="${printer.name}" class="card-img-top">
+                const card = document.createElement('div');
+                card.className = 'printer-card';
+                card.style.width = '600px'; // Reduced from 800px to 600px
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <img src="${printer.image}" alt="${printer.name}">
                         <div class="card-body">
                             <h3 class="card-title">${printer.name}</h3>
                             <p class="card-text">${printer.description}</p>
@@ -65,10 +66,10 @@ async function initializeCarousel() {
                         </div>
                     </div>
                 `;
-                row.appendChild(col);
+                container.appendChild(card);
             });
             
-            item.appendChild(row);
+            item.appendChild(container);
             carouselInner.appendChild(item);
             
             // Create indicator
@@ -83,14 +84,39 @@ async function initializeCarousel() {
             indicators.appendChild(indicator);
         });
         
-        // Initialize Bootstrap carousel
-        const carousel = new bootstrap.Carousel(document.getElementById('printerCarousel'), {
+        // Initialize Bootstrap carousel with mobile-optimized options
+        new bootstrap.Carousel(document.getElementById('printerCarousel'), {
             interval: 5000,
             touch: true,
-            ride: 'carousel'
+            ride: false, // Disable auto start
+            pause: false, // Disable pause on hover
+            keyboard: true,
+            wrap: true,
+            swipe: true,
+            transition: isMobile ? 300 : 400 // Faster transition on mobile
         });
+
+        // Force immediate transition and handle resize
+        const handleTransition = () => {
+            const activeItem = document.querySelector('.carousel-item.active');
+            if (activeItem) {
+                activeItem.style.transition = `transform ${window.innerWidth <= 768 ? 0.3 : 0.4}s ease-in-out`;
+            }
+        };
+
+        setTimeout(handleTransition, 100);
+        window.addEventListener('resize', handleTransition);
         
     } catch (error) {
         console.error('Error loading printers:', error);
     }
 }
+
+// Add resize handler to update grouping when switching between mobile and desktop
+window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    if ((width <= 768 && !isMobile) || (width > 768 && isMobile)) {
+        isMobile = width <= 768;
+        initializeCarousel();
+    }
+});
